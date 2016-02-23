@@ -1,14 +1,14 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 	"io/ioutil"
-	"os"
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
-	"github.com/stretchr/testify/assert"
-	"github.com/gin-gonic/gin"
 )
 
 func TestGetRevision(t *testing.T) {

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
+	"log"
 	"strings"
 )
 
@@ -29,7 +29,7 @@ func RevisionMiddleware() gin.HandlerFunc {
 	if err != nil {
 		return func(c *gin.Context) {
 			c.Next()
- 		}
+		}
 	}
 
 	// Set out header value for each response
