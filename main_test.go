@@ -1,6 +1,8 @@
 package main
 
 import (
+	"io/ioutil"
+	"os"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -9,7 +11,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func TestMiddlewareGeneralCase(t *testing.T) {
+func TestGetRevision(t *testing.T) {
+	content := []byte("temporary file's content")
+	filename := "example"
+
+	if err := ioutil.WriteFile(filename, content, 0644); err != nil {
+		log.Fatalf("WriteFile %s: %v", filename, err)
+	}
+
+	// clean up
+	defer os.Remove(filename)
+
+	result, _ := GetRevision(filename)
+
+	// TEST
+	assert.Equal(t, result, string(content))
+}
+
+func TestRevisionMiddleware(t *testing.T) {
 
 	gin.SetMode(gin.TestMode)
 	r := gin.New()
