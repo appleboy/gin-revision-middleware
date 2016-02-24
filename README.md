@@ -38,6 +38,6 @@ func main() {
 
 Screenshot for header
 
-![header screenshot](screenshots/revision.png)
+![header screenshot](screenshots/revision_header.png)
 
 
