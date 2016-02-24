@@ -32,6 +32,28 @@ func Hello(c *gin.Context) {
 	c.String(http.StatusOK, "Hello World")
 }
 
+func Result(t *testing.T, router *gin.Engine, path string, revision string) {
+	// RUN
+	req, err := http.NewRequest("GET", path, nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	// TEST
+	assert.Equal(t, w.Body.String(), "Hello World")
+	assert.Equal(t, w.HeaderMap.Get("Content-Type"), "text/plain; charset=utf-8")
+
+	if revision == "" {
+		assert.Empty(t, w.HeaderMap.Get("X-Revision"))
+	} else {
+		assert.Equal(t, w.HeaderMap.Get("X-Revision"), revision)
+	}
+}
+
 func TestRevisionMiddleware(t *testing.T) {
 
 	gin.SetMode(gin.TestMode)
@@ -62,63 +84,8 @@ func TestRevisionMiddleware(t *testing.T) {
 		v4.GET("/hello", Hello)
 	}
 
-	// RUN
-	req, err := http.NewRequest("GET", "/v1/hello", nil)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	w := httptest.NewRecorder()
-	r.ServeHTTP(w, req)
-
-	// TEST
-	assert.Equal(t, w.Body.String(), "Hello World")
-	assert.Equal(t, w.HeaderMap.Get("Content-Type"), "text/plain; charset=utf-8")
-	assert.Equal(t, w.HeaderMap.Get("X-Revision"), "1.0.0")
-
-	// RUN
-	req, err = http.NewRequest("GET", "/v2/hello", nil)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	w = httptest.NewRecorder()
-	r.ServeHTTP(w, req)
-
-	// TEST
-	assert.Equal(t, w.Body.String(), "Hello World")
-	assert.Equal(t, w.HeaderMap.Get("Content-Type"), "text/plain; charset=utf-8")
-	assert.Empty(t, w.HeaderMap.Get("X-Revision"))
-
-	// RUN
-	req, err = http.NewRequest("GET", "/v3/hello", nil)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	w = httptest.NewRecorder()
-	r.ServeHTTP(w, req)
-
-	// TEST
-	assert.Equal(t, w.Body.String(), "Hello World")
-	assert.Equal(t, w.HeaderMap.Get("Content-Type"), "text/plain; charset=utf-8")
-	assert.Equal(t, w.HeaderMap.Get("X-Revision"), "3.0.0")
-
-	// RUN
-	req, err = http.NewRequest("GET", "/v4/hello", nil)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	w = httptest.NewRecorder()
-	r.ServeHTTP(w, req)
-
-	// TEST
-	assert.Equal(t, w.Body.String(), "Hello World")
-	assert.Equal(t, w.HeaderMap.Get("Content-Type"), "text/plain; charset=utf-8")
-	assert.Empty(t, w.HeaderMap.Get("X-Revision"))
+	Result(t, r, "/v1/hello", "1.0.0")
+	Result(t, r, "/v2/hello", "")
+	Result(t, r, "/v3/hello", "3.0.0")
+	Result(t, r, "/v4/hello", "")
 }
