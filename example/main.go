@@ -1,7 +1,7 @@
 package main
 
 import (
-	revision "github.com/appleboy/gin-revision-middleware"
+	"github.com/appleboy/gin-revision-middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
