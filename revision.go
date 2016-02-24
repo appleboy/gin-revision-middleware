@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// GetRevision will get revision string from file.
 func GetRevision(fileName string) (string, error) {
 	// Revision file contents will be only loaded once per process
 	data, err := ioutil.ReadFile(fileName)
@@ -23,7 +24,8 @@ func GetRevision(fileName string) (string, error) {
 	return strings.TrimSpace(string(data)), err
 }
 
-func RevisionMiddleware() gin.HandlerFunc {
+// Middleware will auto set Revision on header.
+func Middleware() gin.HandlerFunc {
 	revision, err := GetRevision("REVISION")
 
 	if err != nil {

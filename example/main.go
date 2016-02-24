@@ -1,7 +1,7 @@
 package main
 
 import (
-	m "github.com/appleboy/gin-revision-middleware"
+	revision "github.com/appleboy/gin-revision-middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
@@ -19,7 +19,7 @@ func main() {
 	if port == "" {
 		port = "8000"
 	}
-	router.Use(m.RevisionMiddleware())
+	router.Use(revision.Middleware())
 	router.GET("/", rootHandler)
 	router.Run(":" + port)
 }

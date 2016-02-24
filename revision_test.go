@@ -32,7 +32,7 @@ func TestRevisionMiddleware(t *testing.T) {
 
 	gin.SetMode(gin.TestMode)
 	r := gin.New()
-	r.Use(RevisionMiddleware())
+	r.Use(Middleware())
 	r.Handle("GET", "/", func(c *gin.Context) {
 		c.String(http.StatusOK, "Hello World")
 	})
