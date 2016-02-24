@@ -55,6 +55,13 @@ func TestRevisionMiddleware(t *testing.T) {
 		v3.GET("/hello", Hello)
 	}
 
+	// missin revision file
+	v4 := r.Group("/v4")
+	v4.Use(Middleware("REVISION4"))
+	{
+		v4.GET("/hello", Hello)
+	}
+
 	// RUN
 	req, err := http.NewRequest("GET", "/v1/hello", nil)
 
@@ -99,4 +106,19 @@ func TestRevisionMiddleware(t *testing.T) {
 	assert.Equal(t, w.Body.String(), "Hello World")
 	assert.Equal(t, w.HeaderMap.Get("Content-Type"), "text/plain; charset=utf-8")
 	assert.Equal(t, w.HeaderMap.Get("X-Revision"), "3.0.0")
+
+	// RUN
+	req, err = http.NewRequest("GET", "/v4/hello", nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w = httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	// TEST
+	assert.Equal(t, w.Body.String(), "Hello World")
+	assert.Equal(t, w.HeaderMap.Get("Content-Type"), "text/plain; charset=utf-8")
+	assert.Empty(t, w.HeaderMap.Get("X-Revision"))
 }

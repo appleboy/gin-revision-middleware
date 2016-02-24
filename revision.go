@@ -15,7 +15,7 @@ func GetRevision(fileName string) (string, error) {
 	// If we cant read file, just skip to the next request handler
 	// This is pretty much a NOOP middlware :)
 	if err != nil {
-		log.Fatalf("Unable to read config file '%s'", fileName)
+		log.Println("Unable to read config file '%s'", fileName)
 
 		return "", err
 	}
