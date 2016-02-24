@@ -1,4 +1,4 @@
-package main
+package revision
 
 import (
 	"github.com/gin-gonic/gin"
@@ -13,7 +13,7 @@ import (
 
 func TestGetRevision(t *testing.T) {
 	content := []byte("temporary file's content")
-	filename := "example"
+	filename := "tempfile"
 
 	if err := ioutil.WriteFile(filename, content, 0644); err != nil {
 		log.Fatalf("WriteFile %s: %v", filename, err)
