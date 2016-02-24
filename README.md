@@ -6,7 +6,7 @@ Revision middleware for Gin framework written in Go (Golang).
 
 ## How to use
 
-Please see the [demo](example/main.go) code.
+Please see the [demo](example/main.go) code and creat `REVISION` file and write your application version into file.
 
 ```go
 package main

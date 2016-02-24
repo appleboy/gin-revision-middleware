@@ -25,8 +25,14 @@ func GetRevision(fileName string) (string, error) {
 }
 
 // Middleware will auto set Revision on header.
-func Middleware() gin.HandlerFunc {
-	revision, err := GetRevision("REVISION")
+func Middleware(args ...string) gin.HandlerFunc {
+	fileName := "REVISION"
+
+	if len(args) > 0 {
+		fileName = args[0]
+	}
+
+	revision, err := GetRevision(fileName)
 
 	if err != nil {
 		return func(c *gin.Context) {

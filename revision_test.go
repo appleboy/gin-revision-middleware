@@ -28,17 +28,35 @@ func TestGetRevision(t *testing.T) {
 	assert.Equal(t, result, string(content))
 }
 
+func Hello(c *gin.Context) {
+	c.String(http.StatusOK, "Hello World")
+}
+
 func TestRevisionMiddleware(t *testing.T) {
 
 	gin.SetMode(gin.TestMode)
 	r := gin.New()
-	r.Use(Middleware())
-	r.Handle("GET", "/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello World")
-	})
+	v1 := r.Group("/v1")
+	v1.Use(Middleware())
+	{
+		v1.GET("/hello", Hello)
+	}
+
+	// without middleware
+	v2 := r.Group("/v2")
+	{
+		v2.GET("/hello", Hello)
+	}
+
+	// other revision file
+	v3 := r.Group("/v3")
+	v3.Use(Middleware("REVISION3"))
+	{
+		v3.GET("/hello", Hello)
+	}
 
 	// RUN
-	req, err := http.NewRequest("GET", "/", nil)
+	req, err := http.NewRequest("GET", "/v1/hello", nil)
 
 	if err != nil {
 		log.Fatal(err)
@@ -51,4 +69,34 @@ func TestRevisionMiddleware(t *testing.T) {
 	assert.Equal(t, w.Body.String(), "Hello World")
 	assert.Equal(t, w.HeaderMap.Get("Content-Type"), "text/plain; charset=utf-8")
 	assert.Equal(t, w.HeaderMap.Get("X-Revision"), "1.0.0")
+
+	// RUN
+	req, err = http.NewRequest("GET", "/v2/hello", nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w = httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	// TEST
+	assert.Equal(t, w.Body.String(), "Hello World")
+	assert.Equal(t, w.HeaderMap.Get("Content-Type"), "text/plain; charset=utf-8")
+	assert.Empty(t, w.HeaderMap.Get("X-Revision"))
+
+	// RUN
+	req, err = http.NewRequest("GET", "/v3/hello", nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	w = httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	// TEST
+	assert.Equal(t, w.Body.String(), "Hello World")
+	assert.Equal(t, w.HeaderMap.Get("Content-Type"), "text/plain; charset=utf-8")
+	assert.Equal(t, w.HeaderMap.Get("X-Revision"), "3.0.0")
 }
