@@ -77,7 +77,7 @@ func TestRevisionMiddleware(t *testing.T) {
 		v3.GET("/hello", Hello)
 	}
 
-	// missin revision file
+	// missing revision file
 	v4 := r.Group("/v4")
 	v4.Use(Middleware("REVISION4"))
 	{
