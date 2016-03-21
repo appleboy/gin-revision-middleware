@@ -12,12 +12,8 @@ env:
   global:
   - secure: e1TukXuWH0UbI9QHbue9K4nSlvyF/p5KzDk1VaVRCIn+ZE41lEskqIkssJTcK+RA0lSplKlDtYyvnWu2Zn0eFmyYT9MokcLOdpZQUFJOYpXTO3SqIBnfxZGX+3wtwCkb70Fn12gnThLBvgdL2vDbVE/CfjRqFRA8i4jyzUCkjUkGUvPjGLBs/OwBob3/bzXeOze2TX6LZei/L1ihz7tLeNsPYJQbKaRS7D951eV9B+3ZOWYp+YVEWYV6/ywVN+JXjpau2mczOdOakPO4MyDwvMJiex0WYR/Djz2My8ZPPdarRmt8cKFtxShwemlljlCy8TUBJ7OTNvbArO4t7cJZoj4KKxtW40t5TFs/PWRPbNJvK1uKQm8eYiW0bOOlQVm+AT4VtF4gTGK66JXatCxwUaKQ9v1YRJE0EE3spKO8iSd/VrsqOxMhhbp8kAs/etHzUPt4QiC16uKPxGQiKFMIifENuCSOroT0Cu2jJPpjkAngepzjlvMH0OlIVEB4D/CMol25P7TLozArnGzhi4eR7cdAwP1Z3jmN9dNFGeOM2/vplxeqbWZFADnkyp4ti4ATuZ41hCk5aUd6cjam368iV+j4cLHdXQ1/7sg34zazPVhzG29HK5xuT6UXLxx1o0kvux6/rA8KywvjWNpnKzU9EIX6c64VV00KdIw7iDAeTVc=
 
-before_install:
-  - go get github.com/gin-gonic/gin
-  - go get github.com/stretchr/testify/assert
-
 install:
-  - go get -d -v
+  - go get -t -v ./...
   - go get golang.org/x/tools/cmd/cover
   - go get github.com/mattn/goveralls
 
